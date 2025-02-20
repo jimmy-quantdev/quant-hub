@@ -6,8 +6,8 @@ class DiscordConnector:
     def __init__(self):
         self.webhooks = {
             "VOLUMEBOMB": Env.DISCORD_CHANNEL_VOLUMEBOMB,
-            "CRITICAL": Env.DISCORD_CHANNEL_CRITICAL,
-            "TEST": Env.DISCORD_CHANNEL_TEST,
+            # "CRITICAL": Env.DISCORD_CHANNEL_CRITICAL,
+            # "TEST": Env.DISCORD_CHANNEL_TEST,
         }
 
     def send_message(self, channel, message):
