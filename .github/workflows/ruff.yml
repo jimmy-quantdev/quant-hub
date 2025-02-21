@@ -1,4 +1,5 @@
 name: Ruff
+
 on:
   push:
     branches:
@@ -8,35 +9,29 @@ on:
       - main
 
 jobs:
-  ruff:
+  ruff_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+        with:
+          args: "check"
+
+  ruff_format:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          fetch-depth: 0
-
       - uses: astral-sh/ruff-action@v3
-        with:
-          args: "format"
-
-      - name: Commit changes
+      - run: ruff format
+      - name: Commit changes if needed
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          if ! git diff --quiet; then
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          if ! git diff --cached --quiet; then
             git add .
-            git commit -m "style: auto-format code with Ruff"
-            echo "HAS_CHANGES=true" >> $GITHUB_ENV
-          else
-            echo "No formatting changes needed."
-            echo "HAS_CHANGES=false" >> $GITHUB_ENV
+            git commit -m "chore: auto-format with ruff"
+            git push
           fi
-
-      - name: Push changes
-        if: env.HAS_CHANGES == 'true'
-        run: |
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
