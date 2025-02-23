@@ -14,11 +14,11 @@
 3. Activate the virtual environment:
    - **Windows**:
      ```sh
-     venv\Scripts\activate
+     .venv\Scripts\activate
      ```
    - **Mac/Linux**:
      ```sh
-     source venv/bin/activate
+     source .venv/bin/activate
      ```
 4. Install dependencies:
    ```sh
